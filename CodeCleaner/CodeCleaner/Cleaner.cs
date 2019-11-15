@@ -33,7 +33,7 @@ namespace CodeCleaner
             hunspell.Add("args");
             variables = new List<string>();
             variablesBlockNumber = new List<int>();
-            isForVariable = true;
+            isForVariable = false;
             blockNumber = 0;
             isInFunction = false;
             currentFunctionBlockNumber = 0;
@@ -131,8 +131,8 @@ namespace CodeCleaner
             if (!variables.Contains(name))
                 errors.SynErr(line, column, 214);
         }
-      
-        public void CheckNewVariableName(string name, int line, int coloumn)
+
+        public void CheckNewVariableName(string name, int line, int column)
         {
             CheckLowerCase(name, line, column);
             if (!isForVariable)
