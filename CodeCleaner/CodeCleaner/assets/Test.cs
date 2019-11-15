@@ -40,7 +40,7 @@ namespace P1Test
             }
             while (i>=0)
             {
-                Console.WriteLine(arr[i]);
+                arr[i] += "!";
                 i--;
             }
         }
