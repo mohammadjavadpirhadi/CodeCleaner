@@ -3,7 +3,7 @@ using NHunspell;
 
 namespace CodeCleaner
 {
-    public enum SuggestionKind { MeaninglessWord, UpperCase };
+    public enum SuggestionKind { MeaninglessWord, UpperCase, ParameterCount };
     public class Cleaner
     {
         readonly Hunspell hunspell;
@@ -29,6 +29,9 @@ namespace CodeCleaner
                     break;
                 case SuggestionKind.UpperCase:
                     suggestion = "Name sould starts with upper case!";
+                    break;
+                case SuggestionKind.ParameterCount:
+                    suggestion = "More than 4 parameter!";
                     break;
                 default:
                     break;
@@ -60,6 +63,12 @@ namespace CodeCleaner
         {
             CheckUpperCase(name, line, coloumn);
             CheckNamesMeaning(name, line, coloumn);
+        }
+
+        public void CheckParameterCount(int paramCount, int line, int column)
+        {
+            if (paramCount >= 5)
+                Suggest(line, column, SuggestionKind.ParameterCount);
         }
     }
 }
