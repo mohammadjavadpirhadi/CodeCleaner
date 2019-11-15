@@ -61,5 +61,11 @@ namespace CodeCleaner
             CheckUpperCase(name, line, coloumn);
             CheckNamesMeaning(name, line, coloumn);
         }
+
+        public void CheckNamespaceName(string name, int line, int coloumn)
+        {
+            CheckUpperCase(name, line, coloumn);
+            CheckNamesMeaning(name, line, coloumn);
+        }
     }
 }

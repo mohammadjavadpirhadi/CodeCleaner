@@ -12,26 +12,7 @@ namespace P1Test
         {
             string[] arr = new string[10];
             int i = 0;
-            for (int j = 0; j < arr.Length; i++)
-            {
-                arr[j] = get(i+1);
-                i++;
-            }
-            while (i>=0)
-            {
-                Console.WriteLine(arr[i]);
-                i--;
-            }
+            j = 1;
         }
-
-        int get(int i)
-        {
-            return i.ToString();
-        }
-    }
-
-    public class checNams
-    {
-
     }
 }

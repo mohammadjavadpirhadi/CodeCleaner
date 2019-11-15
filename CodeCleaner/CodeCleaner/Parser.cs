@@ -1540,6 +1540,8 @@ public class Parser
         if (la.kind == 45)
         {
             Get();
+            if (la.kind == 1)
+                cleaner.CheckNamespaceName(la.val, la.line, la.col);
             Expect(1);
             while (la.kind == 91)
             {
