@@ -4,7 +4,7 @@ using NHunspell;
 
 namespace CodeCleaner
 {
-    public enum SuggestionKind { MeaninglessWord, UpperCase, LowerCase };
+    public enum SuggestionKind { MeaninglessWord, UpperCase, LowerCase, ParameterCount };
     public class Cleaner
     {
         readonly Hunspell hunspell;
@@ -43,6 +43,9 @@ namespace CodeCleaner
                 case SuggestionKind.LowerCase:
                     suggestion = "illegal upper case start!";
                     break;
+                case SuggestionKind.ParameterCount:
+                    suggestion = "More than 4 parameter!";
+                    break;
                 default:
                     break;
             }
@@ -80,7 +83,7 @@ namespace CodeCleaner
             CheckUpperCase(name, line, coloumn);
             CheckNamesMeaning(name, line, coloumn);
         }
-
+      
         public void CheckNamespaceName(string name, int line, int coloumn)
         {
             CheckUpperCase(name, line, coloumn);
@@ -138,6 +141,12 @@ namespace CodeCleaner
                 variablesBlockNumber.RemoveAt(variablesBlockNumber.Count - 1);
             }
             blockNumber--;
+        }
+      
+        public void CheckParameterCount(int paramCount, int line, int column)
+        {
+            if (paramCount >= 5)
+                Suggest(line, column, SuggestionKind.ParameterCount);
         }
     }
 }
