@@ -31,7 +31,7 @@ namespace CodeCleaner
             blockNumber = 0;
         }
 
-        void Suggest(int line, int coloumn, SuggestionKind kind)
+        void Suggest(int line, int column, SuggestionKind kind)
         {
             string suggestion = "";
             switch (kind)
@@ -52,56 +52,56 @@ namespace CodeCleaner
                     break;
             }
 
-            suggestionStream.WriteLine("Clean code suggestion in line {0} coloumn {1}: {2}"
-                , line, coloumn, suggestion);
+            suggestionStream.WriteLine("Clean code suggestion in line {0} column {1}: {2}"
+                , line, column, suggestion);
         }
 
-        void CheckNamesMeaning(string name, int line, int colomn)
+        void CheckNamesMeaning(string name, int line, int column)
         {
             string[] words = name.SplitCamelCase();
-            int currentColoumn = colomn;
+            int currentColumn = column;
             for (int i = 0; i < words.Length; i++)
             {
                 if (!hunspell.Spell(words[i]) || (words[i].Length == 1 && words[i] != "I"))
-                    Suggest(line, currentColoumn, SuggestionKind.MeaninglessWord);
-                currentColoumn += words[i].Length;
+                    Suggest(line, currentColumn, SuggestionKind.MeaninglessWord);
+                currentColumn += words[i].Length;
             }
         }
 
-        void CheckUpperCase(string name, int line, int coloumn)
+        void CheckUpperCase(string name, int line, int column)
         {
             if (!name.StartsWithUpperCase())
-                Suggest(line, coloumn, SuggestionKind.UpperCase);
+                Suggest(line, column, SuggestionKind.UpperCase);
         }
 
-        void CheckLowerCase(string name, int line, int coloumn)
+        void CheckLowerCase(string name, int line, int column)
         {
             if (name.StartsWithUpperCase())
-                Suggest(line, coloumn, SuggestionKind.LowerCase);
+                Suggest(line, column, SuggestionKind.LowerCase);
         }
 
-        public void CheckClassName(string name, int line, int coloumn)
+        public void CheckClassName(string name, int line, int column)
         {
-            CheckUpperCase(name, line, coloumn);
-            CheckNamesMeaning(name, line, coloumn);
+            CheckUpperCase(name, line, column);
+            CheckNamesMeaning(name, line, column);
         }
       
-        public void CheckNamespaceName(string name, int line, int coloumn)
+        public void CheckNamespaceName(string name, int line, int column)
         {
-            CheckUpperCase(name, line, coloumn);
-            CheckNamesMeaning(name, line, coloumn);
+            CheckUpperCase(name, line, column);
+            CheckNamesMeaning(name, line, column);
         }
 
-        public void CheckFunctionName(string name, int line, int coloumn)
+        public void CheckFunctionName(string name, int line, int column)
         {
-            CheckUpperCase(name, line, coloumn);
-            CheckNamesMeaning(name, line, coloumn);
+            CheckUpperCase(name, line, column);
+            CheckNamesMeaning(name, line, column);
         }
 
-        public void CheckParameterName(string name, int line, int coloumn)
+        public void CheckParameterName(string name, int line, int column)
         {
-            CheckLowerCase(name, line, coloumn);
-            CheckNamesMeaning(name, line, coloumn);
+            CheckLowerCase(name, line, column);
+            CheckNamesMeaning(name, line, column);
             if (!variables.Contains(name))
             {
                 variables.Add(name);
@@ -109,19 +109,19 @@ namespace CodeCleaner
             }
         }
 
-        public void CheckVariableDefinition(string name, int line, int coloumn)
+        public void CheckVariableDefinition(string name, int line, int column)
         {
             if (!variables.Contains(name))
-                errors.SynErr(line, coloumn, 214);
+                errors.SynErr(line, column, 214);
         }
 
-        public void CheckNewVariableName(string name, int line, int coloumn)
+        public void CheckNewVariableName(string name, int line, int column)
         {
-            CheckLowerCase(name, line, coloumn);
+            CheckLowerCase(name, line, column);
             if (!isForVariable)
-                CheckNamesMeaning(name, line, coloumn);
+                CheckNamesMeaning(name, line, column);
             if (variables.Contains(name))
-                errors.SynErr(line, coloumn, 215);
+                errors.SynErr(line, column, 215);
             else
             {
                 variables.Add(name);

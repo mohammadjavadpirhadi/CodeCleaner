@@ -5112,7 +5112,7 @@ public class Errors
 {
     public int count = 0;                                    // number of errors detected
     public System.IO.TextWriter errorStream = Console.Out;   // error messages go to this stream
-    public string errMsgFormat = "Syntax error in line {0} coloumn {1}: {2}!"; // 0=line, 1=column, 2=text
+    public string errMsgFormat = "Syntax error in line {0} column {1}: {2}!"; // 0=line, 1=column, 2=text
 
     public virtual void SynErr(int line, int col, int n)
     {
