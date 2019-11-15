@@ -1388,7 +1388,7 @@ public class Parser
             if (la.kind == 97)
             {
                 cleaner.blockNumber++;
-                cleaner.CheckIndentBlockCount();
+                cleaner.CheckIndentBlockCount(la.line, la.col);
             }
             else if (la.kind == 113)
                 cleaner.RemoveBlockVariables();
@@ -2245,6 +2245,7 @@ public class Parser
     {
         if (StartOf(14))
         {
+            // CodeCleaner: Check function line count
             cleaner.startLine = la.line;
             cleaner.startColumn = la.col;
             cleaner.isInFunction = true;
@@ -2252,7 +2253,6 @@ public class Parser
             StructMemberDeclaration(m);
             cleaner.isInFunction = false;
             cleaner.endLine = la.line;
-            // CodeCleaner: Check function line count
             cleaner.CheckLineCount();
         }
         else if (la.kind == 117)
@@ -3953,6 +3953,7 @@ public class Parser
 
     void ForInitializer()
     {
+        // CodeCleaner: Set isForVariable
         cleaner.isForVariable = true;
         if (IsLocalVarDecl())
         {
@@ -5123,7 +5124,7 @@ public class Errors
 {
     public int count = 0;                                    // number of errors detected
     public System.IO.TextWriter errorStream = Console.Out;   // error messages go to this stream
-    public string errMsgFormat = "Syntax error in line {0} coloumn {1}: {2}!"; // 0=line, 1=column, 2=text
+    public string errMsgFormat = "Syntax error in line {0} column {1}: {2}!"; // 0=line, 1=column, 2=text
 
     public virtual void SynErr(int line, int col, int n)
     {
