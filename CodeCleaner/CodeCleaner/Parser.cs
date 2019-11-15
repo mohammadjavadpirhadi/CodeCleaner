@@ -2201,8 +2201,7 @@ public class Parser
                 FormalParameterList();
             }
             // CodeCleaner: Check paramter count
-            else
-                cleaner.CheckParameterCount(parameterCount, la.line, la.col);
+            cleaner.CheckParameterCount(parameterCount, la.line, la.col);
             parameterCount--;
         }
         else if (la.kind == 52)
