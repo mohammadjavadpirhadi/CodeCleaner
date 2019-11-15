@@ -8,16 +8,26 @@ namespace P1Test
 {
     class program
     {
+        int a;
         static void main(string[] args)
         {
-            string[] arr = new string[10];
+            get("a", 1);
+            string[] aray = new string[10];
             int i = 0;
-            j = 1;
+            int i = 1;
+            i = 0;
+
+            for (int m = 0;m<aray.Length;m++)
+            {
+                int x = 0;
+            }
+            x = 2;
         }
 
-        int get(string name)
+        int get(string Name, int x)
         {
-            return name.Length;
+            i = 2;
+            return Name.Length;
         }
     }
 }
