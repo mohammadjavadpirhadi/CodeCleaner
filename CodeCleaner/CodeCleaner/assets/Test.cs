@@ -11,7 +11,7 @@ namespace P1Test
         int a;
         static void main(string[] args)
         {
-            get("a", 1);
+            length("a", 1);
             string[] aray = new string[10];
             int i = 0;
             int i = 1;
@@ -25,6 +25,27 @@ namespace P1Test
         }
 
         int get(string Name, int x)
+        {
+            string[] array = new string[10];
+            for (int j = 0; j < array.Length; i++)
+            {
+                for (int i = 0; i < 1; i++)
+                {
+                    for (int t = 0; t < 0; t++)
+                    {
+                        array[j] = get(i + 1);
+                        i++;
+                    }
+                }
+            }
+            while (i>=0)
+            {
+                Console.WriteLine(arr[i]);
+                i--;
+            }
+        }
+
+        int length(int i, int j, int t, int s, int d)
         {
             i = 2;
             return Name.Length;
