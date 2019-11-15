@@ -8,16 +8,32 @@ namespace P1Test
 {
     class program
     {
+        int a;
         static void main(string[] args)
         {
-            string[] arr = new string[10];
-            for (int j = 0; j < arr.Length; i++)
+            length("a", 1);
+            string[] aray = new string[10];
+            int i = 0;
+            int i = 1;
+            i = 0;
+
+            for (int m = 0;m<aray.Length;m++)
+            {
+                int x = 0;
+            }
+            x = 2;
+        }
+
+        int get(string Name, int x)
+        {
+            string[] array = new string[10];
+            for (int j = 0; j < array.Length; i++)
             {
                 for (int i = 0; i < 1; i++)
                 {
                     for (int t = 0; t < 0; t++)
                     {
-                        arr[j] = get(i + 1);
+                        array[j] = get(i + 1);
                         i++;
                     }
                 }
@@ -29,9 +45,10 @@ namespace P1Test
             }
         }
 
-        int get(int i, int j, int t, int s, int d)
+        int length(int i, int j, int t, int s, int d)
         {
-            return name.Length;
+            i = 2;
+            return Name.Length;
         }
     }
 }

@@ -161,6 +161,7 @@ public class Parser
     public Scanner scanner;
     public Errors errors;
     public Cleaner cleaner;
+    bool isForVaiable;
     int parameterCount;
 
     public Token t;    // last recognized token
@@ -1360,10 +1361,11 @@ public class Parser
 
     public Parser(Scanner scanner)
     {
-        this.cleaner = new Cleaner("../../assets/dictionaries", Console.Out);
+        isForVaiable = false;
         this.parameterCount = 0;
         this.scanner = scanner;
         errors = new Errors();
+        this.cleaner = new Cleaner("../../assets/dictionaries", Console.Out, errors);
     }
 
     void SynErr(int n)
@@ -1384,6 +1386,11 @@ public class Parser
         {
             t = la;
             la = scanner.Scan();
+            // CodeCleaner: Manage block variables
+            if (la.kind == 97)
+                cleaner.blockNumber++;
+            else if (la.kind == 113)
+                cleaner.RemoveBlockVariables();
             if (la.kind <= maxT) { ++errDist; break; }
             if (la.kind == 143)
             {
@@ -1542,6 +1549,7 @@ public class Parser
         if (la.kind == 45)
         {
             Get();
+            // CodeCleaner: Check namespace name
             if (la.kind == 1)
                 cleaner.CheckNamespaceName(la.val, la.line, la.col);
             Expect(1);
@@ -2194,6 +2202,7 @@ public class Parser
                 }
             }
             Type(out type, false);
+            // CodeCleaner: Check parameter name
             if (la.kind == 1)
                 cleaner.CheckParameterName(la.val, la.line, la.col);
             Expect(1);
@@ -2596,6 +2605,9 @@ public class Parser
 
     void VariableDeclarators(Modifiers m)
     {
+        // CodeCleaner: Check new variable name
+        if (la.kind == 1)
+            cleaner.CheckNewVariableName(la.val, la.line, la.col, isForVaiable);
         Expect(1);
         if (la.kind == 86)
         {
@@ -2832,6 +2844,7 @@ public class Parser
 
     void MemberName()
     {
+        // CodeCleaner: Check function name
         if (la.kind == 1)
             cleaner.CheckFunctionName(la.val, la.line, la.col);
         Expect(1);
@@ -2998,6 +3011,9 @@ public class Parser
     void LocalVariableDeclarator()
     {
         TypeKind dummy;
+        // CodeCleaner: Check new variable name
+        if (la.kind == 1)
+            cleaner.CheckNewVariableName(la.val, la.line, la.col, isForVaiable);
         Expect(1);
         if (la.kind == 88 || la.kind == 115 || la.kind == 116)
         {
@@ -3928,6 +3944,7 @@ public class Parser
 
     void ForInitializer()
     {
+        isForVaiable = true;
         if (IsLocalVarDecl())
         {
             LocalVariableDeclaration();
@@ -3942,6 +3959,7 @@ public class Parser
             }
         }
         else SynErr(197);
+        isForVaiable = false;
     }
 
     void ForIterator()
@@ -4514,6 +4532,9 @@ public class Parser
                     {
                         TypeArgumentList();
                     }
+                    // CodeCleaner: check variable to be defined
+                    else if (la.kind != 99 && la.kind != 92)
+                        cleaner.CheckVariableDefinition(t.val, t.line, t.col);
                     break;
                 }
             case 68:
@@ -4720,6 +4741,9 @@ public class Parser
                         Get();
                         if (StartOf(15))
                         {
+                            // CodeCleaner: Check variable to be defiend
+                            if (la.kind == 1)
+                                cleaner.CheckVariableDefinition(la.val, la.line, la.col);
                             Argument();
                             while (la.kind == 88)
                             {
@@ -5090,7 +5114,7 @@ public class Errors
 {
     public int count = 0;                                    // number of errors detected
     public System.IO.TextWriter errorStream = Console.Out;   // error messages go to this stream
-    public string errMsgFormat = "-- line {0} col {1}: {2}"; // 0=line, 1=column, 2=text
+    public string errMsgFormat = "Syntax error in line {0} coloumn {1}: {2}!"; // 0=line, 1=column, 2=text
 
     public virtual void SynErr(int line, int col, int n)
     {
@@ -5311,6 +5335,8 @@ public class Errors
             case 211: s = "invalid ImplicitTypedLambdaBody"; break;
             case 212: s = "invalid QueryBody"; break;
             case 213: s = "invalid QueryBodyClause"; break;
+            case 214: s = "undefined variable"; break;
+            case 215: s = "already used name"; break;
 
             default: s = "error " + n; break;
         }

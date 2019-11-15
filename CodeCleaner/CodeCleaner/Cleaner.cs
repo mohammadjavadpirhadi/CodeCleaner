@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using NHunspell;
 
 namespace CodeCleaner
@@ -9,29 +10,37 @@ namespace CodeCleaner
         readonly Hunspell hunspell;
         readonly string affixPath;
         readonly string dictionaryPath;
+        readonly List<string> variables;
+        readonly List<int> variablesBlockNumber;
+        readonly Errors errors;
+        public int blockNumber;
         public TextWriter suggestionStream;   // suggestion messages go to this stream
 
-        public Cleaner(string dictionariesPath, TextWriter suggestionStream)
+        public Cleaner(string dictionariesPath, TextWriter suggestionStream, Errors errors)
         {
             affixPath = Path.Combine(dictionariesPath, "en_US.aff");
             dictionaryPath = Path.Combine(dictionariesPath, "en_US.dic");
             this.suggestionStream = suggestionStream;
+            this.errors = errors;
             hunspell = new Hunspell(affixPath, dictionaryPath);
+            variables = new List<string>();
+            variablesBlockNumber = new List<int>();
+            blockNumber = 0;
         }
 
-        public void Suggest(int line, int coloumn, SuggestionKind kind)
+        void Suggest(int line, int coloumn, SuggestionKind kind)
         {
             string suggestion = "";
             switch (kind)
             {
                 case SuggestionKind.MeaninglessWord:
-                    suggestion = "Meaningless word!";
+                    suggestion = "meaningless word!";
                     break;
                 case SuggestionKind.UpperCase:
-                    suggestion = "Name sould starts with upper case!";
+                    suggestion = "illegal lower case start!";
                     break;
                 case SuggestionKind.LowerCase:
-                    suggestion = "Name sould starts with lower case!";
+                    suggestion = "illegal upper case start!";
                     break;
                 case SuggestionKind.ParameterCount:
                     suggestion = "More than 4 parameter!";
@@ -50,7 +59,7 @@ namespace CodeCleaner
             int currentColoumn = colomn;
             for (int i = 0; i < words.Length; i++)
             {
-                if (!hunspell.Spell(words[i]))
+                if (!hunspell.Spell(words[i]) || (words[i].Length == 1 && words[i] != "I"))
                     Suggest(line, currentColoumn, SuggestionKind.MeaninglessWord);
                 currentColoumn += words[i].Length;
             }
@@ -90,6 +99,47 @@ namespace CodeCleaner
         {
             CheckLowerCase(name, line, coloumn);
             CheckNamesMeaning(name, line, coloumn);
+            if (!variables.Contains(name))
+            {
+                variables.Add(name);
+                variablesBlockNumber.Add(blockNumber + 1);
+            }
+        }
+
+        public void CheckVariableDefinition(string name, int line, int coloumn)
+        {
+            if (!variables.Contains(name))
+                errors.SynErr(line, coloumn, 214);
+        }
+
+        public void CheckNewVariableName(string name, int line, int coloumn, bool isForVariable)
+        {
+            CheckLowerCase(name, line, coloumn);
+            if (!isForVariable)
+                CheckNamesMeaning(name, line, coloumn);
+            if (variables.Contains(name))
+                errors.SynErr(line, coloumn, 215);
+            else
+            {
+                variables.Add(name);
+                if (isForVariable)
+                    variablesBlockNumber.Add(blockNumber + 1);
+                else
+                    variablesBlockNumber.Add(blockNumber);
+            }
+        }
+
+        public void RemoveBlockVariables()
+        {
+            if (variables.Count <= 0)
+                return;
+            while (variables.Count > 0 &&
+                variablesBlockNumber[variablesBlockNumber.Count - 1] == blockNumber)
+            {
+                variables.RemoveAt(variables.Count - 1);
+                variablesBlockNumber.RemoveAt(variablesBlockNumber.Count - 1);
+            }
+            blockNumber--;
         }
       
         public void CheckParameterCount(int paramCount, int line, int column)
