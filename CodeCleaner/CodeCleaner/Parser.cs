@@ -161,7 +161,6 @@ public class Parser
     public Scanner scanner;
     public Errors errors;
     public Cleaner cleaner;
-    bool isForVaiable;
     int parameterCount;
 
     public Token t;    // last recognized token
@@ -1361,7 +1360,6 @@ public class Parser
 
     public Parser(Scanner scanner)
     {
-        isForVaiable = false;
         this.parameterCount = 0;
         this.scanner = scanner;
         errors = new Errors();
@@ -2618,7 +2616,7 @@ public class Parser
     {
         // CodeCleaner: Check new variable name
         if (la.kind == 1)
-            cleaner.CheckNewVariableName(la.val, la.line, la.col, isForVaiable);
+            cleaner.CheckNewVariableName(la.val, la.line, la.col);
         Expect(1);
         if (la.kind == 86)
         {
@@ -3024,7 +3022,7 @@ public class Parser
         TypeKind dummy;
         // CodeCleaner: Check new variable name
         if (la.kind == 1)
-            cleaner.CheckNewVariableName(la.val, la.line, la.col, isForVaiable);
+            cleaner.CheckNewVariableName(la.val, la.line, la.col);
         Expect(1);
         if (la.kind == 88 || la.kind == 115 || la.kind == 116)
         {
@@ -3956,7 +3954,7 @@ public class Parser
     void ForInitializer()
     {
         // CodeCleaner: Set isForVariable
-        isForVaiable = true;
+        cleaner.isForVariable = true;
         if (IsLocalVarDecl())
         {
             LocalVariableDeclaration();
@@ -3971,7 +3969,7 @@ public class Parser
             }
         }
         else SynErr(197);
-        isForVaiable = false;
+        cleaner.isForVariable = false;
     }
 
     void ForIterator()
