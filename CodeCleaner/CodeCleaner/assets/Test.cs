@@ -8,7 +8,7 @@ namespace P1Test
 {
     class program
     {
-        int a;
+        int b;
         static void main(string[] args)
         {
             length("a", 1);
