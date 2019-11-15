@@ -13,6 +13,7 @@ namespace CodeCleaner
         readonly List<string> variables;
         readonly List<int> variablesBlockNumber;
         readonly Errors errors;
+        public bool isForVariable;
         public int blockNumber;
         public TextWriter suggestionStream;   // suggestion messages go to this stream
 
@@ -26,6 +27,7 @@ namespace CodeCleaner
             hunspell.Add("args");
             variables = new List<string>();
             variablesBlockNumber = new List<int>();
+            isForVariable = true;
             blockNumber = 0;
         }
 
@@ -113,7 +115,7 @@ namespace CodeCleaner
                 errors.SynErr(line, coloumn, 214);
         }
 
-        public void CheckNewVariableName(string name, int line, int coloumn, bool isForVariable)
+        public void CheckNewVariableName(string name, int line, int coloumn)
         {
             CheckLowerCase(name, line, coloumn);
             if (!isForVariable)
