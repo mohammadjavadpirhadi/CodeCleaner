@@ -4,7 +4,8 @@ using NHunspell;
 
 namespace CodeCleaner
 {
-    public enum SuggestionKind { MeaninglessWord, UpperCase, LowerCase, ParameterCount };
+    public enum SuggestionKind { MeaninglessWord, UpperCase, LowerCase, ParameterCount, LineCount,
+                                 IndentBlockCount };
     public class Cleaner
     {
         readonly Hunspell hunspell;
@@ -16,6 +17,11 @@ namespace CodeCleaner
         public bool isForVariable;
         public int blockNumber;
         public TextWriter suggestionStream;   // suggestion messages go to this stream
+        public bool isInFunction;
+        public int currentFunctionBlockNumber;
+        public int startLine;
+        public int endLine;
+        public int startColumn;
 
         public Cleaner(string dictionariesPath, TextWriter suggestionStream, Errors errors)
         {
@@ -29,6 +35,11 @@ namespace CodeCleaner
             variablesBlockNumber = new List<int>();
             isForVariable = false;
             blockNumber = 0;
+            isInFunction = false;
+            currentFunctionBlockNumber = 0;
+            startLine = 0;
+            endLine = 0;
+            startColumn = 0;
         }
 
         void Suggest(int line, int column, SuggestionKind kind)
@@ -46,7 +57,13 @@ namespace CodeCleaner
                     suggestion = "illegal upper case start!";
                     break;
                 case SuggestionKind.ParameterCount:
-                    suggestion = "More than 4 parameter!";
+                    suggestion = "more than 4 parameter!";
+                    break;
+                case SuggestionKind.LineCount:
+                    suggestion = "more than 24 line!";
+                    break;
+                case SuggestionKind.IndentBlockCount:
+                    suggestion = "more than 2 indent block!";
                     break;
                 default:
                     break;
@@ -132,6 +149,12 @@ namespace CodeCleaner
             }
         }
 
+        public void CheckIndentBlockCount(int line, int column)
+        {
+            if (isInFunction && currentFunctionBlockNumber + 2 < blockNumber)
+                Suggest(line, column, SuggestionKind.IndentBlockCount);
+        }
+
         public void RemoveBlockVariables()
         {
             if (variables.Count <= 0)
@@ -149,6 +172,12 @@ namespace CodeCleaner
         {
             if (paramCount >= 5)
                 Suggest(line, column, SuggestionKind.ParameterCount);
+        }
+
+        public void CheckLineCount()
+        {
+            if (endLine - startLine + 1 > 24)
+                Suggest(startLine, startColumn, SuggestionKind.LineCount);
         }
     }
 }

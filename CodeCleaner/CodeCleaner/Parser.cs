@@ -1384,9 +1384,12 @@ public class Parser
         {
             t = la;
             la = scanner.Scan();
-            // CodeCleaner: Manage block variables
+            // CodeCleaner: Manage block variables and check indent block count
             if (la.kind == 97)
+            {
                 cleaner.blockNumber++;
+                cleaner.CheckIndentBlockCount(la.line, la.col);
+            }
             else if (la.kind == 113)
                 cleaner.RemoveBlockVariables();
             if (la.kind <= maxT) { ++errDist; break; }
@@ -2242,7 +2245,15 @@ public class Parser
     {
         if (StartOf(14))
         {
+            // CodeCleaner: Check function line count
+            cleaner.startLine = la.line;
+            cleaner.startColumn = la.col;
+            cleaner.isInFunction = true;
+            cleaner.currentFunctionBlockNumber = cleaner.blockNumber+1;
             StructMemberDeclaration(m);
+            cleaner.isInFunction = false;
+            cleaner.endLine = la.line;
+            cleaner.CheckLineCount();
         }
         else if (la.kind == 117)
         {
@@ -3942,6 +3953,7 @@ public class Parser
 
     void ForInitializer()
     {
+        // CodeCleaner: Set isForVariable
         cleaner.isForVariable = true;
         if (IsLocalVarDecl())
         {
