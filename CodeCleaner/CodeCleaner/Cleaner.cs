@@ -34,10 +34,10 @@ namespace CodeCleaner
                     suggestion = "Name sould starts with lower case!";
                     break;
                 case SuggestionKind.ParameterCount:
-                    suggestion = "More than 4 parameter!";
+                    suggestion = "more than 4 parameter!";
                     break;
                 case SuggestionKind.LineCount:
-                    suggestion = "More than 24 line!";
+                    suggestion = "more than 24 line!";
                     break;
                 default:
                     break;
