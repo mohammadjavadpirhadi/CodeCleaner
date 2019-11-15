@@ -23,6 +23,7 @@ namespace CodeCleaner
             this.suggestionStream = suggestionStream;
             this.errors = errors;
             hunspell = new Hunspell(affixPath, dictionaryPath);
+            hunspell.Add("args");
             variables = new List<string>();
             variablesBlockNumber = new List<int>();
             blockNumber = 0;
