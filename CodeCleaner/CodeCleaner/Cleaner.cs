@@ -27,7 +27,7 @@ namespace CodeCleaner
             hunspell.Add("args");
             variables = new List<string>();
             variablesBlockNumber = new List<int>();
-            isForVariable = true;
+            isForVariable = false;
             blockNumber = 0;
         }
 
