@@ -163,9 +163,6 @@ public class Parser
     public Cleaner cleaner;
     bool isForVaiable;
     int parameterCount;
-    int startLine;
-    int endLine;
-    int startColumn;
 
     public Token t;    // last recognized token
     public Token la;   // lookahead token
@@ -1366,9 +1363,6 @@ public class Parser
     {
         isForVaiable = false;
         this.parameterCount = 0;
-        this.startLine = 0;
-        this.endLine = 0;
-        this.startColumn = 0;
         this.scanner = scanner;
         errors = new Errors();
         this.cleaner = new Cleaner("../../assets/dictionaries", Console.Out, errors);
@@ -1392,9 +1386,12 @@ public class Parser
         {
             t = la;
             la = scanner.Scan();
-            // CodeCleaner: Manage block variables
+            // CodeCleaner: Manage block variables and check indent block count
             if (la.kind == 97)
+            {
                 cleaner.blockNumber++;
+                cleaner.CheckIndentBlockCount();
+            }
             else if (la.kind == 113)
                 cleaner.RemoveBlockVariables();
             if (la.kind <= maxT) { ++errDist; break; }
@@ -2250,12 +2247,15 @@ public class Parser
     {
         if (StartOf(14))
         {
-            startLine = la.line;
-            startColumn = la.col;
+            cleaner.startLine = la.line;
+            cleaner.startColumn = la.col;
+            cleaner.isInFunction = true;
+            cleaner.currentFunctionBlockNumber = cleaner.blockNumber+1;
             StructMemberDeclaration(m);
-            endLine = la.line;
+            cleaner.isInFunction = false;
+            cleaner.endLine = la.line;
             // CodeCleaner: Check function line count
-            cleaner.CheckLineCount(startLine, endLine, startColumn);
+            cleaner.CheckLineCount();
         }
         else if (la.kind == 117)
         {
