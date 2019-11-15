@@ -52,11 +52,7 @@ namespace P1Test
             i++;
         }
 
-<<<<<<< HEAD
-        int get(int man, int hi, int hello, int bye, int umbrella)
-=======
-        int length(int i, int j, int t, int s, int d)
->>>>>>> 853d277b16153a79bad66ee11cc57d3497469451
+        int Home(int man, int hi, int hello, int bye, int umbrella)
         {
             i = 2;
             return Name.Length;
