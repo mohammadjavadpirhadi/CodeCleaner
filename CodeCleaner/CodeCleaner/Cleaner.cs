@@ -3,7 +3,7 @@ using NHunspell;
 
 namespace CodeCleaner
 {
-    public enum SuggestionKind { MeaninglessWord, UpperCase };
+    public enum SuggestionKind { MeaninglessWord, UpperCase, LowerCase };
     public class Cleaner
     {
         readonly Hunspell hunspell;
@@ -29,6 +29,9 @@ namespace CodeCleaner
                     break;
                 case SuggestionKind.UpperCase:
                     suggestion = "Name sould starts with upper case!";
+                    break;
+                case SuggestionKind.LowerCase:
+                    suggestion = "Name sould starts with lower case!";
                     break;
                 default:
                     break;
@@ -56,6 +59,12 @@ namespace CodeCleaner
                 Suggest(line, coloumn, SuggestionKind.UpperCase);
         }
 
+        void CheckLowerCase(string name, int line, int coloumn)
+        {
+            if (name.StartsWithUpperCase())
+                Suggest(line, coloumn, SuggestionKind.LowerCase);
+        }
+
         public void CheckClassName(string name, int line, int coloumn)
         {
             CheckUpperCase(name, line, coloumn);
@@ -67,9 +76,16 @@ namespace CodeCleaner
             CheckUpperCase(name, line, coloumn);
             CheckNamesMeaning(name, line, coloumn);
         }
+
         public void CheckFunctionName(string name, int line, int coloumn)
         {
             CheckUpperCase(name, line, coloumn);
+            CheckNamesMeaning(name, line, coloumn);
+        }
+
+        public void CheckParameterName(string name, int line, int coloumn)
+        {
+            CheckLowerCase(name, line, coloumn);
             CheckNamesMeaning(name, line, coloumn);
         }
     }
