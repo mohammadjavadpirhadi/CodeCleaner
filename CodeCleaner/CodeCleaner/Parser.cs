@@ -162,6 +162,9 @@ public class Parser
     public Errors errors;
     public Cleaner cleaner;
     int parameterCount;
+    int startLine;
+    int endLine;
+    int startColumn;
 
     public Token t;    // last recognized token
     public Token la;   // lookahead token
@@ -1362,6 +1365,9 @@ public class Parser
     {
         this.cleaner = new Cleaner("../../assets/dictionaries", Console.Out);
         this.parameterCount = 0;
+        this.startLine = 0;
+        this.endLine = 0;
+        this.startColumn = 0;
         this.scanner = scanner;
         errors = new Errors();
     }
@@ -2236,7 +2242,12 @@ public class Parser
     {
         if (StartOf(14))
         {
+            startLine = la.line;
+            startColumn = la.col;
             StructMemberDeclaration(m);
+            endLine = la.line;
+            // CodeCleaner: Check function line count
+            cleaner.CheckLineCount(startLine, endLine, startColumn);
         }
         else if (la.kind == 117)
         {

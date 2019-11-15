@@ -3,7 +3,7 @@ using NHunspell;
 
 namespace CodeCleaner
 {
-    public enum SuggestionKind { MeaninglessWord, UpperCase, LowerCase, ParameterCount };
+    public enum SuggestionKind { MeaninglessWord, UpperCase, LowerCase, ParameterCount, LineCount };
     public class Cleaner
     {
         readonly Hunspell hunspell;
@@ -35,6 +35,9 @@ namespace CodeCleaner
                     break;
                 case SuggestionKind.ParameterCount:
                     suggestion = "More than 4 parameter!";
+                    break;
+                case SuggestionKind.LineCount:
+                    suggestion = "More than 24 line!";
                     break;
                 default:
                     break;
@@ -96,6 +99,12 @@ namespace CodeCleaner
         {
             if (paramCount >= 5)
                 Suggest(line, column, SuggestionKind.ParameterCount);
+        }
+
+        public void CheckLineCount(int startLine, int endLine, int column)
+        {
+            if (endLine - startLine + 1 > 24)
+                Suggest(startLine, column, SuggestionKind.LineCount);
         }
     }
 }
