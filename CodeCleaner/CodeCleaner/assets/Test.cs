@@ -26,8 +26,9 @@ namespace P1Test
 
         int get(string Name, int x)
         {
+            int identify = 0;
             string[] array = new string[10];
-            for (int j = 0; j < array.Length; i++)
+            for (int j = 0; j < array.Length; j++)
             {
                 for (int i = 0; i < 1; i++)
                 {
@@ -38,10 +39,10 @@ namespace P1Test
                     }
                 }
             }
-            while (i>=0)
+            while (identify>=0)
             {
-                arr[i] += "!";
-                i--;
+                array[i] += "!";
+                identify--;
             }
             for (int k = 0; k < 10; k++)
             {
@@ -49,13 +50,13 @@ namespace P1Test
             }
             char[] myLove = { 'm', 'o', 'h', 'a', 'm', 'm', 'a', 'd', 'j', 'a', 'v', 'a', 'd'
                             , ' ', 'p', 'i', 'r', 'h', 'a', 'd', 'i' };
-            i++;
+            identify++;
         }
 
-        int Home(int man, int hi, int hello, int bye, int umbrella)
+        int Home(int men, int hi, int hello, int bye, string umbrella)
         {
-            i = 2;
-            return Name.Length;
+            men = 2;
+            return umbrella.Length;
         }
     }
 }

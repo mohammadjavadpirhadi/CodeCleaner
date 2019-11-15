@@ -4,7 +4,8 @@ using NHunspell;
 
 namespace CodeCleaner
 {
-    public enum SuggestionKind { MeaninglessWord, UpperCase, LowerCase, ParameterCount, LineCount };
+    public enum SuggestionKind { MeaninglessWord, UpperCase, LowerCase, ParameterCount, LineCount,
+                                 IndentBlockCount };
     public class Cleaner
     {
         readonly Hunspell hunspell;
@@ -15,6 +16,11 @@ namespace CodeCleaner
         readonly Errors errors;
         public int blockNumber;
         public TextWriter suggestionStream;   // suggestion messages go to this stream
+        public bool isInFunction;
+        public int currentFunctionBlockNumber;
+        public int startLine;
+        public int endLine;
+        public int startColumn;
 
         public Cleaner(string dictionariesPath, TextWriter suggestionStream, Errors errors)
         {
@@ -27,6 +33,11 @@ namespace CodeCleaner
             variables = new List<string>();
             variablesBlockNumber = new List<int>();
             blockNumber = 0;
+            isInFunction = false;
+            currentFunctionBlockNumber = 0;
+            startLine = 0;
+            endLine = 0;
+            startColumn = 0;
         }
 
         void Suggest(int line, int coloumn, SuggestionKind kind)
@@ -48,6 +59,9 @@ namespace CodeCleaner
                     break;
                 case SuggestionKind.LineCount:
                     suggestion = "more than 24 line!";
+                    break;
+                case SuggestionKind.IndentBlockCount:
+                    suggestion = "more than 2 indent block!";
                     break;
                 default:
                     break;
@@ -133,6 +147,11 @@ namespace CodeCleaner
             }
         }
 
+        public void CheckIndentBlockCount()
+        {
+            if (isInFunction && currentFunctionBlockNumber + 2 < blockNumber)
+                Suggest(startLine, startColumn, SuggestionKind.IndentBlockCount);
+        }
         public void RemoveBlockVariables()
         {
             if (variables.Count <= 0)
@@ -152,10 +171,10 @@ namespace CodeCleaner
                 Suggest(line, column, SuggestionKind.ParameterCount);
         }
 
-        public void CheckLineCount(int startLine, int endLine, int column)
+        public void CheckLineCount()
         {
             if (endLine - startLine + 1 > 24)
-                Suggest(startLine, column, SuggestionKind.LineCount);
+                Suggest(startLine, startColumn, SuggestionKind.LineCount);
         }
     }
 }
