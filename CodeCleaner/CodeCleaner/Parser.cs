@@ -161,6 +161,7 @@ public class Parser
     public Scanner scanner;
     public Errors errors;
     public Cleaner cleaner;
+    int parameterCount;
 
     public Token t;    // last recognized token
     public Token la;   // lookahead token
@@ -1360,6 +1361,7 @@ public class Parser
     public Parser(Scanner scanner)
     {
         this.cleaner = new Cleaner("../../assets/dictionaries", Console.Out);
+        this.parameterCount = 0;
         this.scanner = scanner;
         errors = new Errors();
     }
@@ -2195,11 +2197,17 @@ public class Parser
             if (la.kind == 1)
                 cleaner.CheckParameterName(la.val, la.line, la.col);
             Expect(1);
+            // CodeCleaner: Check parameter count
+            parameterCount++;
             if (la.kind == 88)
             {
                 Get();
                 FormalParameterList();
             }
+            // CodeCleaner: Check paramter count
+            else
+                cleaner.CheckParameterCount(parameterCount, la.line, la.col);
+            parameterCount--;
         }
         else if (la.kind == 52)
         {
