@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace P1Test
 {
-    class progam
+    class program
     {
         static void Main(string[] args)
         {
@@ -14,12 +14,12 @@ namespace P1Test
             int i = 0;
             for (int j = 0; j < arr.Length; i++)
             {
-                arr[j] = get(i+1)
+                arr[j] = get(i+1);
                 i++;
             }
             while (i>=0)
             {
-                Console.WriteLine(arr[j]);
+                Console.WriteLine(arr[i]);
                 i--;
             }
         }
@@ -28,5 +28,10 @@ namespace P1Test
         {
             return i.ToString();
         }
+    }
+
+    public class checNams
+    {
+
     }
 }
