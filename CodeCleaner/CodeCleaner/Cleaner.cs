@@ -67,5 +67,10 @@ namespace CodeCleaner
             CheckUpperCase(name, line, coloumn);
             CheckNamesMeaning(name, line, coloumn);
         }
+        public void CheckFunctionName(string name, int line, int coloumn)
+        {
+            CheckUpperCase(name, line, coloumn);
+            CheckNamesMeaning(name, line, coloumn);
+        }
     }
 }

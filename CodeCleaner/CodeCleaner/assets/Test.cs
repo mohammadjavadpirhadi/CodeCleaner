@@ -8,11 +8,16 @@ namespace P1Test
 {
     class program
     {
-        static void Main(string[] args)
+        static void main(string[] args)
         {
             string[] arr = new string[10];
             int i = 0;
             j = 1;
+        }
+
+        int get(string name)
+        {
+            return name.Length;
         }
     }
 }
