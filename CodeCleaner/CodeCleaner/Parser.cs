@@ -2823,6 +2823,8 @@ public class Parser
 
     void MemberName()
     {
+        if (la.kind == 1)
+            cleaner.CheckFunctionName(la.val, la.line, la.col);
         Expect(1);
         if (la.kind == 92)
         {
