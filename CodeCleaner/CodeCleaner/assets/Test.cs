@@ -43,6 +43,12 @@ namespace P1Test
                 arr[i] += "!";
                 i--;
             }
+            for (int k = 0; k < 10; k++)
+            {
+                k++;
+            }
+            char[] myLove = { m, o, h, a, m, m, a, d, j, a, v, a, d, ' ', p, i, r, h, a, d, i };
+            i++;
         }
 
         int length(int i, int j, int t, int s, int d)
