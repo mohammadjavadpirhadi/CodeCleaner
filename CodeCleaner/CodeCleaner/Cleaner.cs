@@ -28,7 +28,7 @@ namespace CodeCleaner
                     suggestion = "Meaningless word!";
                     break;
                 case SuggestionKind.UpperCase:
-                    suggestion = "Name sould starts with upper case";
+                    suggestion = "Name sould starts with upper case!";
                     break;
                 default:
                     break;
