@@ -8,7 +8,7 @@ namespace P1Test
 {
     class program
     {
-        static void Main(string[] args)
+        static void main(string[] args)
         {
             string[] arr = new string[10];
             for (int j = 0; j < arr.Length; i++)
@@ -31,12 +31,7 @@ namespace P1Test
 
         int get(int i, int j, int t, int s, int d)
         {
-            return i.ToString();
+            return name.Length;
         }
-    }
-
-    public class checNams
-    {
-
     }
 }

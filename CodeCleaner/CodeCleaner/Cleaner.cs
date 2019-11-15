@@ -3,7 +3,7 @@ using NHunspell;
 
 namespace CodeCleaner
 {
-    public enum SuggestionKind { MeaninglessWord, UpperCase, ParameterCount };
+    public enum SuggestionKind { MeaninglessWord, UpperCase, LowerCase, ParameterCount };
     public class Cleaner
     {
         readonly Hunspell hunspell;
@@ -29,6 +29,9 @@ namespace CodeCleaner
                     break;
                 case SuggestionKind.UpperCase:
                     suggestion = "Name sould starts with upper case!";
+                    break;
+                case SuggestionKind.LowerCase:
+                    suggestion = "Name sould starts with lower case!";
                     break;
                 case SuggestionKind.ParameterCount:
                     suggestion = "More than 4 parameter!";
@@ -59,12 +62,36 @@ namespace CodeCleaner
                 Suggest(line, coloumn, SuggestionKind.UpperCase);
         }
 
+        void CheckLowerCase(string name, int line, int coloumn)
+        {
+            if (name.StartsWithUpperCase())
+                Suggest(line, coloumn, SuggestionKind.LowerCase);
+        }
+
         public void CheckClassName(string name, int line, int coloumn)
         {
             CheckUpperCase(name, line, coloumn);
             CheckNamesMeaning(name, line, coloumn);
         }
+      
+        public void CheckNamespaceName(string name, int line, int coloumn)
+        {
+            CheckUpperCase(name, line, coloumn);
+            CheckNamesMeaning(name, line, coloumn);
+        }
 
+        public void CheckFunctionName(string name, int line, int coloumn)
+        {
+            CheckUpperCase(name, line, coloumn);
+            CheckNamesMeaning(name, line, coloumn);
+        }
+
+        public void CheckParameterName(string name, int line, int coloumn)
+        {
+            CheckLowerCase(name, line, coloumn);
+            CheckNamesMeaning(name, line, coloumn);
+        }
+      
         public void CheckParameterCount(int paramCount, int line, int column)
         {
             if (paramCount >= 5)

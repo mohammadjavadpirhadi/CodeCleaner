@@ -1542,6 +1542,8 @@ public class Parser
         if (la.kind == 45)
         {
             Get();
+            if (la.kind == 1)
+                cleaner.CheckNamespaceName(la.val, la.line, la.col);
             Expect(1);
             while (la.kind == 91)
             {
@@ -2192,6 +2194,8 @@ public class Parser
                 }
             }
             Type(out type, false);
+            if (la.kind == 1)
+                cleaner.CheckParameterName(la.val, la.line, la.col);
             Expect(1);
             // CodeCleaner: Check parameter count
             parameterCount++;
@@ -2828,6 +2832,8 @@ public class Parser
 
     void MemberName()
     {
+        if (la.kind == 1)
+            cleaner.CheckFunctionName(la.val, la.line, la.col);
         Expect(1);
         if (la.kind == 92)
         {
