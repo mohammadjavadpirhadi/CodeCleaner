@@ -1,6 +1,6 @@
 ﻿using System.Collections;
 using System;
-using System.Text.RegularExpressions;
+using CodeCleaner;
 
 public class Parser
 {
@@ -160,6 +160,7 @@ public class Parser
 
     public Scanner scanner;
     public Errors errors;
+    public Cleaner cleaner;
 
     public Token t;    // last recognized token
     public Token la;   // lookahead token
@@ -1358,6 +1359,7 @@ public class Parser
 
     public Parser(Scanner scanner)
     {
+        this.cleaner = new Cleaner("../../assets/dictionaries", Console.Out);
         this.scanner = scanner;
         errors = new Errors();
     }
@@ -1380,7 +1382,6 @@ public class Parser
         {
             t = la;
             la = scanner.Scan();
-            //Console.WriteLine(la.val + " : " +  la.kind.ToString());
             if (la.kind <= maxT) { ++errDist; break; }
             if (la.kind == 143)
             {
@@ -1736,6 +1737,9 @@ public class Parser
             {
                 m.Check(classesMod);
                 Get();
+                // CodeCleaner: Check class name
+                if (la.kind == 1)
+                    cleaner.CheckClassName(la.val, la.line, la.col);
                 Expect(1);
                 if (la.kind == 101)
                 {
