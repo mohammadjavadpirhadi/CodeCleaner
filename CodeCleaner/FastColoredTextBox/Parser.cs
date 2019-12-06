@@ -753,7 +753,7 @@ namespace CodeCleaner
         // A pragmas sensitive Peek mehtod.
         Token PeekWithPragmas()
         {
-            Token _x = scanner.Peek();
+            Token _x = scanner.PeekWithPragmas();
             while (_x.kind > maxT)
             {
                 // Handle Pragma, this MUST stay in SYNC with the semantic actions of the pragmas!
@@ -779,7 +779,7 @@ namespace CodeCleaner
                     ElifOrElsePragma();
                 }
                 isScanMode = true;
-                _x = scanner.Peek();
+                _x = scanner.PeekWithPragmas();
             }
             return _x;
         }
@@ -797,7 +797,7 @@ namespace CodeCleaner
             }
             else
             {
-                return scanner.Peek();
+                return scanner.PeekWithPragmas();
             }
         }
 

@@ -1297,6 +1297,17 @@ namespace CodeCleaner
             return pt;
         }
 
+        // peek the next token, including pragmas
+        public Token PeekWithPragmas()
+        {
+            if (pt.next == null)
+            {
+                pt.next = NextToken();
+            }
+            pt = pt.next;
+            return pt;
+        }
+
         // make sure that peeking starts at the current scan position
         public void ResetPeek() { pt = tokens; }
 
